@@ -6,6 +6,7 @@ import { Text, View } from '@/src/components/Themed';
 import { FIREBASE_AUTH } from '@/Firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
+import { Link } from 'expo-router';
 
 export default function Register() {
 
@@ -50,6 +51,7 @@ export default function Register() {
           </Pressable>)}
         {validationError && <Text style={styles.errorText}>{validationError}</Text>}
       </View>
+      <Text style={styles.infoText}>You already have an account? <Link style={styles.link} href="/login">Login!</Link></Text>
     </View>
   )
 }
@@ -117,5 +119,18 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     marginTop: 24,
-  }
+  },
+  infoText: {
+    color: 'white',
+    alignItems: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    marginTop: 24,
+  },
+  link: {
+    fontStyle: 'italic',
+    fontWeight: 'bold',
+    textDecorationLine: 'underline',
+    fontSize: 16,
+  },
 });
