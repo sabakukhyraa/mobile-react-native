@@ -124,7 +124,6 @@ const styles = StyleSheet.create({
   link: {
     fontStyle: 'italic',
     fontWeight: 'bold',
-    textDecorationLine: 'underline',
     fontSize: 16,
   },
 });
