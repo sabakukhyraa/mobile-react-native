@@ -64,16 +64,16 @@ function Layout() {
           headerShown: false
         }}>
         {!user ? (
-          <AuthorizedLayout />
-        ) : (
           <UnauthorizedLayout />
+        ) : (
+          <AuthorizedLayout />
         )}
         <Stack.Screen name="modal" options={{ presentation: 'modal', headerShown: true, headerBackTitleVisible: true, headerBackTitle: 'Notes', title: 'Notes' }} />
       </Stack>
     </ThemeProvider>
   )
 
-  function AuthorizedLayout() {
+  function UnauthorizedLayout() {
     return (
       <>
         <Stack.Screen name="login" options={{ headerShown: false }} />
@@ -82,7 +82,7 @@ function Layout() {
     )
   }
 
-  function UnauthorizedLayout() {
+  function AuthorizedLayout() {
     return (
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
     )
