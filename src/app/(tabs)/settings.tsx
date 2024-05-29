@@ -1,14 +1,69 @@
-import { StyleSheet } from 'react-native';
-
-import EditScreenInfo from '@/src/components/EditScreenInfo';
+import { Pressable, StyleSheet } from 'react-native';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import Colors from '@/src/constants/Colors';
+import { useColorScheme } from '@/src/components/useColorScheme';
 import { Text, View } from '@/src/components/Themed';
-
+import { FIREBASE_AUTH } from '@/Firebase';
 export default function SettingsScreen() {
+  const colorScheme = useColorScheme();
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab Three</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/two.tsx" />
+      <View style={styles.listSection}>
+        <Pressable
+          style={styles.listItem}
+          onPress={() => { }}
+        >
+          {({ pressed }) => (
+            <>
+              <FontAwesome
+                name="sticky-note"
+                size={25}
+                color={Colors[colorScheme ?? 'light'].text}
+                style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+              />
+              <Text>
+                Something
+              </Text>
+            </>
+          )}
+        </Pressable>
+        <Pressable
+          style={styles.listItem}
+          onPress={() => { }}
+        >
+          {({ pressed }) => (
+            <>
+              <FontAwesome
+                name="trash"
+                size={25}
+                color={Colors[colorScheme ?? 'light'].text}
+                style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+              />
+              <Text>
+                Delete All Data
+              </Text>
+            </>
+          )}
+        </Pressable>
+        <Pressable
+          style={styles.listItem}
+          onPress={() => FIREBASE_AUTH.signOut()}
+        >
+          {({ pressed }) => (
+            <>
+              <FontAwesome
+                name="sign-out"
+                size={25}
+                color={Colors[colorScheme ?? 'light'].text}
+                style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+              />
+              <Text>
+                Log out
+              </Text>
+            </>
+          )}
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -17,15 +72,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+  listSection: {
+    width: '100%',
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
+  listItem: {
+    color: 'white',
+    paddingLeft: 16,
+  }
 });

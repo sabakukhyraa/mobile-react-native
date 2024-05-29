@@ -6,7 +6,7 @@ import { Text, View } from '@/src/components/Themed';
 import { useState } from 'react';
 import { FIREBASE_AUTH } from '@/Firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 
 export default function Login() {
 
