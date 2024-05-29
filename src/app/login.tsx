@@ -1,7 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
-import { ActivityIndicator, Button, Platform, Pressable, StyleSheet, TextInput } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, TextInput } from 'react-native';
 
-import EditScreenInfo from '@/src/components/EditScreenInfo';
 import { Text, View } from '@/src/components/Themed';
 import { useState } from 'react';
 import { FIREBASE_AUTH } from '@/Firebase';
