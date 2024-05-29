@@ -39,9 +39,9 @@ export default function Register() {
       <Text style={styles.title}>Sign Up</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <View style={styles.form}>
-        <TextInput selectionColor="#fff" value={email} style={styles.input} placeholder='Email' placeholderTextColor="#fff" autoCapitalize='none' onChangeText={text => setEmail(text)}></TextInput>
-        <TextInput selectionColor="#fff" value={password} style={styles.input} placeholder='Password' placeholderTextColor="#fff" secureTextEntry={true} autoCapitalize='none' onChangeText={text => setPassword(text)}></TextInput>
-        <TextInput selectionColor="#fff" value={passwordAgain} style={styles.input} placeholder='Password Again' placeholderTextColor="#fff" secureTextEntry={true} autoCapitalize='none' onChangeText={text => setPasswordAgain(text)}></TextInput>
+        <TextInput selectionColor="#fff" value={email} style={styles.input} placeholder='Email' placeholderTextColor="rgba(255,255,255,.7)" autoCapitalize='none' onChangeText={text => setEmail(text)}></TextInput>
+        <TextInput selectionColor="#fff" value={password} style={styles.input} placeholder='Password' placeholderTextColor="rgba(255,255,255,.7)" secureTextEntry={true} autoCapitalize='none' onChangeText={text => setPassword(text)}></TextInput>
+        <TextInput selectionColor="#fff" value={passwordAgain} style={styles.input} placeholder='Password Again' placeholderTextColor="rgba(255,255,255,.7)" secureTextEntry={true} autoCapitalize='none' onChangeText={text => setPasswordAgain(text)}></TextInput>
         {loading
           ? (<ActivityIndicator size="large" color="#0000ff" />)
           : (<Pressable style={styles.button} onPress={register} >
