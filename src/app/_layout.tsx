@@ -21,19 +21,6 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
 
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    onAuthStateChanged(FIREBASE_AUTH, (user) => {
-      setUser(user)
-      if (!user) {
-        router.navigate('/login')
-      } else {
-        router.navigate('/home')
-      }
-    })
-  }, [])
-
   const [loaded, error] = useFonts({
     SpaceMono: require('../../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
@@ -53,30 +40,51 @@ export default function RootLayout() {
     return null;
   }
 
+  return <Layout />;
+}
+
+function Layout() {
+
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    onAuthStateChanged(FIREBASE_AUTH, (user) => {
+      setUser(user)
+      if (!user) {
+        router.navigate('/login')
+      } else {
+        router.navigate('/home')
+      }
+    })
+  }, [])
   return (
     <ThemeProvider value={DarkTheme}>
       <Stack
         screenOptions={{
-          headerStyle: {
-            backgroundColor: '#f4511e',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
+          headerShown: false
         }}>
         {!user ? (
-          <>
-            <Stack.Screen name="login" options={{ headerShown: false }} />
-            <Stack.Screen name="register" options={{ headerShown: false }} />
-          </>
+          <AuthorizedLayout />
         ) : (
-          <>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Notes' }} />
-          </>
+          <UnauthorizedLayout />
         )}
+        <Stack.Screen name="modal" options={{ presentation: 'modal', headerShown: true, headerBackTitleVisible: true, headerBackTitle: 'Notes', title: 'Notes' }} />
       </Stack>
     </ThemeProvider>
-  );
+  )
+
+  function AuthorizedLayout() {
+    return (
+      <>
+        <Stack.Screen name="login" options={{ headerShown: false }} />
+        <Stack.Screen name="register" options={{ headerShown: false }} />
+      </>
+    )
+  }
+
+  function UnauthorizedLayout() {
+    return (
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    )
+  }
 }
