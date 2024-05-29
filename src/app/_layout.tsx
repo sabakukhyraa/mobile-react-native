@@ -8,6 +8,7 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/src/components/useColorScheme';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_AUTH } from '@/Firebase';
+import { usePathname } from 'expo-router';
 
 export {
   ErrorBoundary,
@@ -45,6 +46,7 @@ export default function RootLayout() {
 
 function Layout() {
 
+  const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -57,34 +59,24 @@ function Layout() {
       }
     })
   }, [])
+
+  useEffect(() => {
+    if (pathname == "/") {
+      user ? router.navigate("/home") : router.navigate("/login");
+    }
+  }, [pathname]);
+
   return (
     <ThemeProvider value={DarkTheme}>
       <Stack
         screenOptions={{
           headerShown: false
         }}>
-        {!user ? (
-          <UnauthorizedLayout />
-        ) : (
-          <AuthorizedLayout />
-        )}
+        <Stack.Screen name="login" options={{ headerShown: false }} />
+        <Stack.Screen name="register" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal', headerShown: true, headerBackTitleVisible: true, headerBackTitle: 'Notes', title: 'Notes' }} />
       </Stack>
     </ThemeProvider>
   )
-
-  function UnauthorizedLayout() {
-    return (
-      <>
-        <Stack.Screen name="login" options={{ headerShown: false }} />
-        <Stack.Screen name="register" options={{ headerShown: false }} />
-      </>
-    )
-  }
-
-  function AuthorizedLayout() {
-    return (
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    )
-  }
 }
