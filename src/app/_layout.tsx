@@ -20,6 +20,16 @@ export const unstable_settings = {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+
+  const [user, setUser] = useState<User | null>();
+
+  useEffect(() => {
+    onAuthStateChanged(FIREBASE_AUTH, (user) => {
+      console.log('user', user);
+      setUser(user)
+    })
+  }, [])
+
   const [loaded, error] = useFonts({
     SpaceMono: require('../../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
@@ -39,21 +49,6 @@ export default function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav />;
-}
-
-function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
-  const [user, setUser] = useState<User | null>();
-
-  useEffect(() => {
-    onAuthStateChanged(FIREBASE_AUTH, (user) => {
-      console.log('user', user);
-      setUser(user)
-    })
-  }, [])
-
   return (
     <ThemeProvider value={DarkTheme}>
       <Stack
@@ -66,21 +61,26 @@ function RootLayoutNav() {
             fontWeight: 'bold',
           },
         }}>
-        {user
-          ? (
-            <>
-              <Stack.Screen name="login" options={{ headerShown: false }} />
-              <Stack.Screen name="register" options={{ headerShown: false }} />
-            </>
-          ) : (
-            <>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Notes' }} />
-            </>
-          )
-        }
-
+        {!user ? (
+          <>
+            <Stack.Screen name="login" options={{ headerShown: false }} />
+            <Stack.Screen name="register" options={{ headerShown: false }} />
+          </>
+        ) : (
+          <RootLayoutNav />
+        )}
       </Stack>
     </ThemeProvider>
+  );
+}
+
+function RootLayoutNav() {
+  const colorScheme = useColorScheme();
+
+  return (
+    <>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Notes' }} />
+    </>
   );
 }
