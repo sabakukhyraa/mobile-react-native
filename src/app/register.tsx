@@ -23,7 +23,7 @@ export default function Register() {
       try {
         const response = await createUserWithEmailAndPassword(auth, email, password)
         console.log(response);
-        alert('Check your email!')
+        alert('Register successed!')
       } catch (error: any) {
         console.log(error)
         alert('Register failed ' + error.message)

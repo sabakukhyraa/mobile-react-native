@@ -3,8 +3,8 @@ import { Pressable, StyleSheet, TextInput, TouchableOpacity, FlatList } from 're
 import { Text, View } from '@/src/components/Themed';
 import { useEffect, useState } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { addDoc, collection, doc, getDocs, query, where } from 'firebase/firestore'
-import { FIREBASE_DB } from '@/Firebase';
+import { addDoc, collection, doc, getDocs, deleteDoc, updateDoc, query, where, setDoc } from 'firebase/firestore'
+import { FIREBASE_AUTH, FIREBASE_DB } from '@/Firebase';
 
 interface Todo {
   id: string;
@@ -20,45 +20,53 @@ export default function TodoScreen() {
   const [todo, setTodo] = useState<string>('');
   const [todos, setTodos] = useState<Todo[]>([]);
 
+  const todosCollection = collection(FIREBASE_DB, 'todos')
 
   const getter = async () => {
-    setTodos([])
-    const q = query(collection(FIREBASE_DB, 'todos'), where("userId", "==", auth.currentUser?.uid || ''))
+    const q = query(todosCollection, where("userId", "==", auth.currentUser?.uid || ''))
     const querySnapshots = await getDocs(q);
     const newTodos: Todo[] = [];
     querySnapshots.forEach((doc) => {
-      const a = doc.data()
-      if (todos.find(todo => a.id == todo.id)) {
-      } else {
-        newTodos.push({ id: doc.id, value: a.value, isDone: a.isDone, userId: a.userId });
-      }
+      const { value, isDone, userId } = doc.data()
+      newTodos.push({ id: doc.id, value, isDone, userId });
     });
-
-    setTodos((prevTodos) => [...prevTodos, ...newTodos]);
+    setTodos(newTodos);
   }
 
-  useEffect(() => {
-    getter()
-  }, []);
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      try {
+        const todos = await getter();
+        // Gelen verileri işleme
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+    }
+  });
 
   const addTodo = async () => {
     if (todo.length > 0) {
       const userId = auth.currentUser?.uid ?? 'defaultUser';
-      const myCollection = collection(FIREBASE_DB, 'todos')
       const newTodo = { value: todo, isDone: false, userId: userId }
-      const newDocRef = await addDoc(myCollection, newTodo);
+      const newDocRef = await addDoc(todosCollection, newTodo);
       setTodos([...todos, { id: newDocRef.id, value: todo, isDone: false, userId: userId }]);
       setTodo('');
     }
   };
 
-  const removeTodo = (todoId: string) => {
+  const removeTodo = async (todoId: string) => {
+    await deleteDoc(doc(todosCollection, todoId))
     setTodos(todos.filter(todo => todo.id !== todoId));
   };
 
-  const doneTodo = (todoId: string) => {
+  const doneTodo = async (item: Todo) => {
+
+    const myDocRef = doc(todosCollection, item.id)
+
+    await setDoc(myDocRef, { value: item.value, isDone: !item.isDone, userId: item.userId })
     setTodos(todos.map(todo => {
-      if (todo.id === todoId) {
+      if (todo.id === item.id) {
         return { ...todo, isDone: !todo.isDone };
       } else {
         return todo;
@@ -89,7 +97,7 @@ export default function TodoScreen() {
         <FlatList
           data={todos}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => doneTodo(item.id)} onLongPress={() => removeTodo(item.id)}>
+            <TouchableOpacity onPress={() => doneTodo(item)} onLongPress={() => removeTodo(item.id)}>
               <View style={[styles.todoItem, item.isDone && styles.todoItemDone]}>
                 <Text style={item.isDone ? styles.todoTextDone : styles.todoText}>{item.value}</Text>
               </View>
