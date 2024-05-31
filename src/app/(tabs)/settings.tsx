@@ -8,10 +8,11 @@ export default function SettingsScreen() {
   const colorScheme = useColorScheme();
 
   const logout = () => {
-    const alertResponse = Alert.alert('Question', 'Are you sure you want to log out?', [
-      { text: 'Cancel', onPress: () => { } },
-      { text: 'Sure', onPress: () => FIREBASE_AUTH.signOut() }
-    ])
+    // const alertResponse = Alert.alert('Question', 'Are you sure you want to log out?', [
+    //   { text: 'Cancel', onPress: () => { } },
+    //   { text: 'Sure', onPress: () => FIREBASE_AUTH.signOut() }
+    // ])
+    FIREBASE_AUTH.signOut()
   }
 
   return (
